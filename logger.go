@@ -2,13 +2,25 @@ package logger
 
 import (
 	"fmt"
-	"io"
 	"log"
 )
 
 type Logger struct {
 	*log.Logger
 	debugger *log.Logger
+}
+
+func New(prefix string, config *Config) *Logger {
+	conf := initConfig(config)
+
+	var logger Logger
+	if *conf.DebugEnabled {
+		logger.Logger = log.New(&writer{conf.Writer, conf.TimeFormat}, prefix, conf.DebugTrace)
+		logger.debugger = log.New(&writer{conf.Writer, conf.TimeFormat}, conf.DebugPrefix, conf.DebugTrace)
+	} else {
+		logger.Logger = log.New(&writer{conf.Writer, conf.TimeFormat}, prefix, conf.Trace)
+	}
+	return &logger
 }
 
 func (l *Logger) Errorf(format string, a ...interface{}) error {
@@ -34,18 +46,4 @@ func (l *Logger) Debugln(a ...interface{}) {
 	if l.debugger != nil {
 		l.debugger.Output(2, fmt.Sprintln(a...))
 	}
-}
-
-
-func NewLogger(out io.Writer, timeFormat, prefix string, debug bool) Logger {
-	var logger Logger
-	timeFormat = fmt.Sprintf("%s ", timeFormat)
-
-	if debug {
-		logger.Logger = log.New(&writer{out, timeFormat, fmt.Sprintf("[%s] ", prefix)}, "", log.Lshortfile)
-		logger.debugger = log.New(&writer{out, timeFormat, fmt.Sprintf("[%s-debug] ", prefix)}, "", log.Lshortfile)
-	} else {
-		logger.Logger = log.New(&writer{out, timeFormat, fmt.Sprintf("[%s] ", prefix)}, "", 0)
-	}
-	return logger
 }
