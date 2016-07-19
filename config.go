@@ -3,15 +3,16 @@ package elog
 import (
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"strconv"
 	"strings"
 )
 
 const (
-	NoTrace   = 1
-	LongFile  = 1 << (iota + 2) // full file name and line number: /a/b/c/d.go:23
-	ShortFile                   // final file name element and line number: d.go:23
+	NoTrace   = 1              // no file name or line lumber
+	LongFile  = log.Llongfile  // full file name and line number: /a/b/c/d.go:23
+	ShortFile = log.Lshortfile // final file name element and line number: d.go:23
 )
 
 type Config struct {
@@ -30,7 +31,7 @@ func initConfig(config *Config) *Config {
 		// default configurations
 		Writer:     os.Stdout,
 		TimeFormat: "2006/01/02 15:04:05",
-		Trace:      0,
+		Trace:      NoTrace,
 		// debugging config
 		DebugEnvVar:  "DEBUG",
 		DebugEnabled: nil,
@@ -45,7 +46,9 @@ func initConfig(config *Config) *Config {
 		if config.TimeFormat != "" {
 			conf.TimeFormat = config.TimeFormat
 		}
-		if config.Trace != 0 {
+		if config.Trace == NoTrace || config.Trace == 0 {
+			conf.Trace = 0
+		} else {
 			conf.Trace = config.Trace
 		}
 		// debugging conf
@@ -58,12 +61,13 @@ func initConfig(config *Config) *Config {
 		if config.DebugPrefix != "" {
 			conf.DebugPrefix = config.DebugPrefix
 		}
-		if config.DebugTrace != 0 {
-			if config.DebugTrace == 8 || config.DebugTrace == 16 {
-				conf.DebugTrace = config.DebugTrace
-			} else {
-				conf.DebugTrace = 0
-			}
+		if config.DebugTrace == NoTrace {
+			conf.DebugTrace = 0
+		} else if config.DebugTrace == 0 {
+			conf.DebugTrace = ShortFile // default
+		} else {
+			conf.DebugTrace = config.DebugTrace
+
 		}
 	}
 
