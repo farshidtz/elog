@@ -19,7 +19,6 @@ type Config struct {
 	Writer       io.Writer
 	TimeFormat   string
 	Prefix       string
-	Trace        int
 	DebugEnabled *bool
 	DebugPrefix  string
 	DebugTrace   int
@@ -31,7 +30,6 @@ func initConfig(config *Config) *Config {
 		// default configurations
 		Writer:     os.Stdout,
 		TimeFormat: "2006/01/02 15:04:05",
-		Trace:      NoTrace,
 		// debugging config
 		DebugEnvVar:  "DEBUG",
 		DebugEnabled: nil,
@@ -45,11 +43,6 @@ func initConfig(config *Config) *Config {
 		}
 		if config.TimeFormat != "" {
 			conf.TimeFormat = config.TimeFormat
-		}
-		if config.Trace == NoTrace || config.Trace == 0 {
-			conf.Trace = 0
-		} else {
-			conf.Trace = config.Trace
 		}
 		// debugging conf
 		if config.DebugEnabled != nil {

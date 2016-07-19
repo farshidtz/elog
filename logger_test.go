@@ -39,15 +39,6 @@ func ExamplePrint() {
 	// Output: [test] message
 }
 
-func ExamplePrint_trace() {
-	logger := New("[test] ", &Config{
-		TimeFormat: " ", // remove time for test
-		Trace:      ShortFile,
-	})
-	logger.Println("message")
-	// Output: [test] logger_test.go:47: message
-}
-
 func ExampleDebug() {
 	var debug bool = true
 	logger := New("[test] ", &Config{
@@ -56,7 +47,7 @@ func ExampleDebug() {
 		DebugPrefix:  "[test-debug] ",
 	})
 	logger.Debugln("message")
-	// Output: [test-debug] logger_test.go:58: message
+	// Output: [test-debug] logger_test.go:49: message
 }
 
 func ExampleDebug_trace() {
