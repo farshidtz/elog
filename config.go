@@ -19,7 +19,7 @@ type Config struct {
 	// Writer is the destination to which log data is written
 	// Default: os.Stdout
 	Writer       io.Writer
-	// TimeFormat is the format of time in the prefix
+	// TimeFormat is the format of time in the prefix (compatible with https://golang.org/pkg/time/#pkg-constants)
 	// Default: "2006/01/02 15:04:05"
 	TimeFormat   string
 	// Trace is to control the tracing information
