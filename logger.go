@@ -1,6 +1,7 @@
 package elog
 
 import (
+	"errors"
 	"fmt"
 	"log"
 )
@@ -90,8 +91,15 @@ E.g. :
   Prints: 2016/07/19 17:44:22 [debug] example.go:22: Division error: cannot divide by zero
 */
 func (l *Logger) Errorf(format string, a ...interface{}) error {
-	if l.debug != nil {
-		l.debug.Output(2, fmt.Sprintf(format, a...))
+	var message string
+	if len(a) == 0 {
+		message = fmt.Sprintf(format)
+	} else {
+		message = fmt.Sprintf(format, a...)
 	}
-	return fmt.Errorf(format, a...)
+
+	if l.debug != nil {
+		l.debug.Output(2, message)
+	}
+	return errors.New(message)
 }

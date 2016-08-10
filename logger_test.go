@@ -18,6 +18,14 @@ func TestErrorf(t *testing.T) {
 	if err.Error() != "error message" {
 		t.Fatalf("Error message is %q instead of %q", err.Error(), "error message")
 	}
+	// Error with flags
+	err = logger.Errorf("error %d", 404)
+	if err == nil {
+		t.Fatal("Error not returned.")
+	}
+	if err.Error() != "error 404" {
+		t.Fatalf("Error message is %q instead of %q", err.Error(), "error 404")
+	}
 }
 
 func ExampleErrorf() {
@@ -28,7 +36,7 @@ func ExampleErrorf() {
 		DebugPrefix:  "[test-debug] ",
 	})
 	logger.Errorf("error message")
-	// Output: [test-debug] logger_test.go:30: error message
+	// Output: [test-debug] logger_test.go:38: error message
 }
 
 func ExamplePrint() {
@@ -45,7 +53,7 @@ func ExamplePrint_trace() {
 		Trace:      ShortFile,
 	})
 	logger.Println("message")
-	// Output: [test] logger_test.go:47: message
+	// Output: [test] logger_test.go:55: message
 }
 
 func ExampleDebug() {
@@ -56,7 +64,7 @@ func ExampleDebug() {
 		DebugPrefix:  "[test-debug] ",
 	})
 	logger.Debugln("message")
-	// Output: [test-debug] logger_test.go:58: message
+	// Output: [test-debug] logger_test.go:66: message
 }
 
 func ExampleDebug_trace() {
