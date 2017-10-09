@@ -103,9 +103,9 @@ func (l *Logger) Errorf(format string, a ...interface{}) error {
 
 // ServeHTTP logs HTTP requests and can be used as Logger in a negroni middlewares
 func (l *Logger) ServeHTTP(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
-	l.Debugf("\"%s %s\"\n", r.Method, r.URL.String())
+	l.DebugOutput(3, fmt.Sprintf("\"%s %s\"\n", r.Method, r.URL.String()))
 	start := time.Now()
 	nw := negroni.NewResponseWriter(w)
 	next(nw, r)
-	l.Printf("\"%s %s %s\" %d %v\n", r.Method, r.URL.String(), r.Proto, nw.Status(), time.Now().Sub(start))
+	l.Output(3, fmt.Sprintf("\"%s %s %s\" %d %v\n", r.Method, r.URL.String(), r.Proto, nw.Status(), time.Now().Sub(start)))
 }
