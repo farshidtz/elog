@@ -3,6 +3,10 @@ package elog
 import (
 	"fmt"
 	"log"
+	"net/http"
+	"time"
+
+	"github.com/codegangsta/negroni"
 )
 
 type Logger struct {
